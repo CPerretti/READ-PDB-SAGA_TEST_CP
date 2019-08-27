@@ -10,10 +10,12 @@ library(ggplot2)
 #library(sf)
 #library(mapview)
 
+#CHANGE TO YOUR PASSWORD AND USER NAME!!!!! **************************************************
+Sys.setenv(ORACLE_HOME="/ora1/app/oracle/product/11.2.0/dbhome_1")
+#sole <- odbcConnect(dsn="sole", uid="xxxxx", pwd="xxxxxxx", believeNRows=FALSE)
 #webshot::install_phantomjs()
 
 source("chooser.R") 
-Sys.setenv(ORACLE_HOME="/ora1/app/oracle/product/11.2.0/dbhome_1")
 species <- read.csv('files/speciesTable.csv')
 spp.list <- split(species$SVSPP,species$COMNAME)
 strata.list <- read.csv('files/StrataList.csv')
@@ -242,11 +244,12 @@ ui <-
               #Add help text here
               h2("CAUTION: This product should not be used to generate survey indices for stock assessments!"),
               p(paste0(" This application is intended for use as an exploratory tool only. It allows analysts to experiment with "
-                       ," different specifications for stock definitions, different length and age distributions, "
-                       ," calibrations, or tow success criteria. The indices generated here will differ (slightly) from "
-                       ," those generated in SAGA or ADIOS! and should not be used directly in stock assessments. ADIOS! "
-                       ," remains the preferred source for stock assessment inputs. ")),
+                ," different specifications for stock definitions, different length and age distributions, "
+                ," calibrations, or tow success criteria. The indices generated here will differ (slightly) from "
+                ," those generated in SAGA or ADIOS! and should not be used directly in stock assessments. ADIOS! "
+                ," remains the preferred source for stock assessment inputs. ")),
               h2("Survey Indices"),
+
               p(paste0("On this tab, the user selects the strata, species, seasons, years, lengths and ages for which they would like "
               ," the application to develop indices from the NEFSC bottom trawl survey. Users can also choose to apply calibrations or different combinations "
               ," of SHG codes. "),
@@ -307,12 +310,12 @@ ui <-
               p(paste0("This button will cause an html version of the map to be downloaded to the'Downloads' directory. "
                        ," The html map can be opened in a browser and will remain interactive. A pdf of the map after "
                        ," manipulation can be saved using the browsers 'File/Export to pdf' function. ")
-                ),
-              br(),
-              h4("Questions?"),
-              p("Contact:"),
-              p("Alicia Miller x2185 alicia.miller@noaa.gov or"),
-              p("Dan Hennen x2398 daniel.hennen@noaa.gov")
+               ),
+                br(),
+                h4("Questions?"),
+                p("Contact:"),
+                p("Alicia Miller x2185 alicia.miller@noaa.gov or"),
+                p("Dan Hennen x2398 daniel.hennen@noaa.gov")
               )
             )
           )
@@ -861,7 +864,7 @@ server = function(input, output, session){
     catch.data$bubbleSize <- 1+(catch.data$bubbleSize-1)/2     # rescaling the size of the points
     
     catch.data <- catch.data[catch.data$SEASON %in% input$season,]
-    #print(input$season)
+    print(names(catch.data))
     #print(table(catch.data$SEASON))  
     return(catch.data)
     
@@ -876,7 +879,8 @@ server = function(input, output, session){
         setView(-71, 40, 6) %>% # map location
         addPolylines(data = Strata, color = "grey", weight = 1.5) %>%
         addCircles(color='navy',catch.data$DECDEG_BEGLON[catch.data$EXPCATCHNUM>0],catch.data$DECDEG_BEGLAT[catch.data$EXPCATCHNUM>0],
-                   popup = paste("Station: ",catch.data$STATION.x[catch.data$EXPCATCHNUM>0], "<br>",
+                   popup = paste("Year: ",catch.data$EST_YEAR[catch.data$EXPCATCHNUM>0], "<br>",
+                                 "Station: ",catch.data$STATION.x[catch.data$EXPCATCHNUM>0], "<br>",
                                  "Stratum: ",catch.data$STRATUM.x[catch.data$EXPCATCHNUM>0], "<br>",
                                  "Tow: ",catch.data$TOW.x[catch.data$EXPCATCHNUM>0], "<br>",
                                  "Catch Wt (kg): ",catch.data$EXPCATCHWT[catch.data$EXPCATCHNUM>0], "<br>",
