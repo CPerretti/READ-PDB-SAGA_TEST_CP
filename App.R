@@ -972,17 +972,17 @@ server = function(input, output, session){
   
   output$downloadMapHTML <- downloadHandler(
     filename = function() { 
-      showNotification("Downloading map...",duration=5,id="downloadmap",type="message")
+      showNotification("Downloading map...",duration=NULL,id="downloadmap",type="message")
       paste("SurveyMap",input$species, input$season
-                                  , input$len1[1],input$len1[2], '.html', sep='_') },
+                                  , input$len1[1],input$len1[2], '.html', sep='_') 
+      },
     content = function(file) {
       htmlwidgets::saveWidget(
          widget = foundational.map()
          , file = file
        )
-      
+      removeNotification(id="downloadmap") #remove only after the map has downloaded
     }
-    
   )
   
    output$text <- renderUI({
