@@ -120,7 +120,13 @@ ui <-
                             h5(strong("Select strata:")),
                             #uiOutput("ui.strata")
                             chooserInput("mychooser", "Available strata", "Selected frobs", #new custom widget strata selection using chooser.R
-                                         strata.list[,1], c(), size = 36, multiple = TRUE)#,
+                                         leftChoices = setdiff(strata.list[,1], 
+                                                               c("01260", "01270", "01280",
+                                                               "01360", "01370", "01380",
+                                                               "01390", "01400")), 
+                                         rightChoices = c("01260", "01270", "01280",
+                                                          "01360", "01370", "01380",
+                                                          "01390", "01400"), size = 36, multiple = TRUE)#,
                             #strata.list[,1], bsb.in$strata, size = 36, multiple = TRUE) #used for testing - autoinputs BSB strata
                             #strata.list[,1], uiOutput("ui.sp_info")$strata, size = 36, multiple = TRUE),
                             #checkboxInput("assess_strata", label = strong("Use assessment strata"), value = TRUE)
@@ -129,7 +135,7 @@ ui <-
                             
                             selectInput("species", "Select species:",              #Species drop menu
                                         choices =  species$COMNAME, 
-                                        selected = "BLACK SEA BASS"),
+                                        selected = "HADDOCK"),
                             #uiOutput("ui.species"),
                             #selectInput("stock", "Select stock:",              #Species drop menu
                             #            choices =  species$STOCKNAME, 
@@ -192,16 +198,16 @@ ui <-
                               column(5,
                                      selectInput("calib_type", "Bigelow calibration:",
                                                  c("none", "convert to Albatross", "convert to Bigelow"),
-                                                 selected = "none"),
+                                                 selected = "convert to Albatross"),
                                      uiOutput("ui.big.calib")),
                               #uiOutput("ui.big.calib.stock")    ),
                               column(7,
                                      selectInput("gdv_calib", "Gear/Door/Vessel calibration:",
                                                  c("none", "specify values"),
-                                                 selected = "none"),
+                                                 selected = "specify values"),
                                      uiOutput("ui.gdv.calib"))),
                             fluidRow(
-                              checkboxInput("swept_area", label = strong("Use measured swept area"), value = TRUE)
+                              checkboxInput("swept_area", label = strong("Use measured swept area"), value = FALSE)
                             ),
                             
                             fluidRow(
@@ -405,7 +411,7 @@ server = function(input, output, session){
              "convert to Albatross" = selectInput("calib_meth", "Select calibration method:",
                                                   choices = c("constant" = "alb.const.rho",
                                                               "length" = "alb.len.rho"),
-                                                  selected = "alb.const.rho"
+                                                  selected = "alb.len.rho"
              ),
              "convert to Bigelow" = selectInput("calib_meth", "Select calibration method:",
                                                 choices = c("constant" = "big.const.rho",
@@ -437,20 +443,20 @@ server = function(input, output, session){
              column(4,
                     textInput("door.num", 
                               label = "Door num." , 
-                              value = "1", 
+                              value = "1.49", 
                               width = "50px"),
                     textInput("door.wt", 
                               label = "wt." , 
-                              value = "1", 
+                              value = "1.51", 
                               width = "50px")),
              column(4,
                     textInput("vessel.num", 
                               label = "Vessel num.", 
-                              value = "1", 
+                              value = "0.82", 
                               width = "50px"),
                     textInput("vessel.wt", 
                               label = "wt.", 
-                              value = "1", 
+                              value = "0.79", 
                               width = "50px"))
            ),
            "convert to Bigelow" = selectInput("calib_meth", "Select calibration method:",
