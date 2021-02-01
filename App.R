@@ -150,7 +150,7 @@ ui <-
                                      sliderInput("years", "Select range of year(s):",            #Years slider
                                                  min = 1950, 
                                                  max = 2020,
-                                                 value = c(1968,2020), sep = ""))),
+                                                 value = c(1968,2019), sep = ""))),
                             fluidRow(
                               column(6,
                                      uiOutput("ui.len")),
